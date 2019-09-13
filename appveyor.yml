@@ -41,13 +41,13 @@ build_script:
 
     if(-not (Test-Path openssl-1.0.2j-fips-x86_64.zip )) {
         Start-FileDownload 'https://sourceforge.net/projects/openssl/files/openssl-1.0.2j-fips-x86_64/openssl-1.0.2j-fips-x86_64.zip'
-        Unzip -ZipFile openssl-1.0.2j-fips-x86_64.zip -TargetFolder files\openssl
+        Unzip -ZipFile $PWD\openssl-1.0.2j-fips-x86_64.zip -TargetFolder $PWD\files\openssl
     }
 
 
     if(-not (Test-Path openssl-1.0.2j-fips-x86_64.zip )) {
         Start-FileDownload 'https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.13.1-src/pyside-setup-everywhere-src-5.13.1.zip'
-        Unzip -ZipFile pyside-setup-everywhere-src-5.13.1.zip -TargetFolder files\pyside2
+        Unzip -ZipFile $PWD\pyside-setup-everywhere-src-5.13.1.zip -TargetFolder $PWD\files\pyside2
     }
 
 
