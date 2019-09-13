@@ -39,17 +39,14 @@ install:
     mkdir files
 
 
-    xcopy "Windows\%PLATFORM%\PyQt5\Qt\*" %QTDIR% /S /E /Y /D
-
-
     if(-not (Test-Path openssl-1.0.2j-fips-x86_64.zip )) {
-        curl -fsS -o openssl-1.0.2j-fips-x86_64.zip https://sourceforge.net/projects/openssl/files/openssl-1.0.2j-fips-x86_64/openssl-1.0.2j-fips-x86_64.zip
+        (new-object net.webclient).DownloadString('https://sourceforge.net/projects/openssl/files/openssl-1.0.2j-fips-x86_64/openssl-1.0.2j-fips-x86_64.zip','openssl-1.0.2j-fips-x86_64.zip')
         Unzip -ZipFile openssl-1.0.2j-fips-x86_64.zip -TargetFolder files\openssl
     }
 
 
     if(-not (Test-Path openssl-1.0.2j-fips-x86_64.zip )) {
-        curl -fsS -o pyside-setup-everywhere-src-5.13.1.zip https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.13.1-src/pyside-setup-everywhere-src-5.13.1.zip
+        (new-object net.webclient).DownloadString('https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.13.1-src/pyside-setup-everywhere-src-5.13.1.zip','pyside-setup-everywhere-src-5.13.1.zip')
         Unzip -ZipFile pyside-setup-everywhere-src-5.13.1.zip -TargetFolder files\pyside2
     }
 
@@ -66,6 +63,8 @@ build_script:
     "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %PLATFORM%
 
     python  --version
+
+    xcopy "Windows\%PLATFORM%\PyQt5\Qt\*" %QTDIR% /S /E /Y /D
 
     set PATH=%PATH%;%cd%\files\openssl\bin;
 
