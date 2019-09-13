@@ -1,0 +1,38 @@
+language: cpp
+python:
+  - "3.5"
+branches:
+  only:
+    - master
+notifications:
+  email:
+    recipients:
+      - 892768447@qq.com
+    on_success: change
+    on_failure: always
+cache:
+  directories:
+  - "$HOME/soft"
+
+before_install:
+  - mkdir -p $HOME/soft
+  - export QT_CI_PACKAGES=qt.qt5.5131.gcc_64
+
+install:
+  - if [ ! -f "$HOME/soft/libclang-release_80-based-windows-vs2017_32.7z" ]; then wget -P $HOME/soft -q http://download.qt.io/development_releases/prebuilt/libclang/libclang-release_80-based-windows-vs2017_32.7z; fi
+
+  - if [ ! -f "$HOME/soft/openssl-1.0.2j-fips-x86_64.zip" ]; then wget -P $HOME/soft -q https://sourceforge.net/projects/openssl/files/openssl-1.0.2j-fips-x86_64/openssl-1.0.2j-fips-x86_64.zip/download openssl-1.0.2j-fips-x86_64.zip; fi
+
+  - if [ ! -f "$HOME/soft/http://download.qt.io/archive/qt/5.13/5.13.1/qt-opensource-windows-x86-5.13.1.exe" ]; then wget -P $HOME/soft -q http://download.qt.io/archive/qt/5.13/5.13.1/qt-opensource-windows-x86-5.13.1.exe; fi
+
+  - if [ ! -d "$HOME/soft/Qt5.13.1/5.13.1/gcc_64" ]; then ./extract-qt-installer $HOME/soft/qt-opensource-linux-x64-5.13.1.run $HOME/soft/Qt5.13.1; fi
+
+  - ls $HOME/soft/Qt5.13.1
+  - cp -rf Windows/x86/PyQt5/Qt/* $HOME/soft/Qt5.13.1/5.13.1/gcc_64/
+
+before_script:
+  - export TZ='Asia/Shanghai'
+
+script:
+  - export PATH=$HOME/soft/Qt5.13.1/5.13.1/gcc_64/bin/:$PATH
+  - echo $PATH
