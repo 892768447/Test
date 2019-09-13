@@ -19,7 +19,7 @@ init:
 build:
   parallel: true
   verbosity: minimal
-install:
+build_script:
 - ps: >-
     Function Unzip()
 
@@ -40,13 +40,13 @@ install:
 
 
     if(-not (Test-Path openssl-1.0.2j-fips-x86_64.zip )) {
-        (new-object net.webclient).DownloadString('https://sourceforge.net/projects/openssl/files/openssl-1.0.2j-fips-x86_64/openssl-1.0.2j-fips-x86_64.zip')
+        Start-FileDownload 'https://sourceforge.net/projects/openssl/files/openssl-1.0.2j-fips-x86_64/openssl-1.0.2j-fips-x86_64.zip'
         Unzip -ZipFile openssl-1.0.2j-fips-x86_64.zip -TargetFolder files\openssl
     }
 
 
     if(-not (Test-Path openssl-1.0.2j-fips-x86_64.zip )) {
-        (new-object net.webclient).DownloadString('https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.13.1-src/pyside-setup-everywhere-src-5.13.1.zip')
+        Start-FileDownload 'https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.13.1-src/pyside-setup-everywhere-src-5.13.1.zip'
         Unzip -ZipFile pyside-setup-everywhere-src-5.13.1.zip -TargetFolder files\pyside2
     }
 
@@ -58,7 +58,6 @@ install:
 
 
     dir files\pyside2
-build_script:
 - cmd: >-
     "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %PLATFORM%
 
