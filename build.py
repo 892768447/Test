@@ -67,7 +67,7 @@ def buildPySide2():
                 if chunk:
                     fp.write(chunk)
         sleep(1)
-    os.system('cd /D {0}\r\n7z x {1}'.format(os.path.abspath('./')), name)
+    os.system('cd /D {0}\r\n7z x {1}'.format(os.path.abspath('./'), name))
 
     print('extractall libclang ok')
 
