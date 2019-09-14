@@ -12,9 +12,7 @@ environment:
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
-    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;C:\\OpenSSL-Win32\\bin;%CD%\\libclang\\bin;%PATH%"
-    CLANG_INSTALL_DIR: "%CD%\\libclang"
-    LLVM_INSTALL_DIR: "%CD%\\libclang"
+    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;C:\\OpenSSL-Win32\\bin;%PATH%"
     CONFIG: Release
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -34,5 +32,15 @@ build_script:
     qmake --version
 
     xcopy "Windows\%PLATFORM%\PyQt5\Qt\*" %QTDIR% /S /E /Y /D
+
+    dir
+
+    set CLANG_INSTALL_DIR=%CD%\libclang
+
+    set LLVM_INSTALL_DIR=%CD%\libclang
+
+    set PATH=%PATH%;%CD%\libclang\bin
+
+    echo %PATH%
 
     C:\Python35\python build.py -p Windows -a x86 --qmake=%QTDIR%\bin\qmake.exe --openssl=C:\OpenSSL-Win32\bin
