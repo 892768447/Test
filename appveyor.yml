@@ -24,4 +24,4 @@ build_script:
 
     xcopy "Windows\%PLATFORM%\PyQt5\Qt\*" %QTDIR% /S /E /Y /D
 
-    C:\Python35\python setup.py build --qmake=%QTDIR%\bin\qmake.exe
+    C:\Python35\python build.py -p Windows -a x86  --qmake=%QTDIR%\bin\qmake.exe
