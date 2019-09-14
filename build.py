@@ -16,8 +16,6 @@ import sys
 from time import sleep
 from zipfile import ZipFile
 
-import requests
-
 
 try:
     from pip._internal import main as _main  # @UnusedImport
@@ -58,6 +56,7 @@ print('sudo:', args.sudo)
 
 
 def buildPySide2():
+    import requests
     # 编译
     name = 'libclang-release_80-based-windows-vs2017_32.7z'
     if not os.path.exists(name):
