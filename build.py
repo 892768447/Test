@@ -11,15 +11,25 @@ Created on 2019年9月10日
 """
 import argparse
 import os
-import shutil
 import subprocess
 import sys
+from time import sleep
 from zipfile import ZipFile
+
+import requests
+
+
+try:
+    from pip._internal import main as _main  # @UnusedImport
+except:
+    from pip import main as _main  # @Reimport @UnresolvedImport
 
 
 __Author__ = 'Irony'
 __Copyright__ = 'Copyright (c) 2019 Irony'
 __Version__ = 1.0
+
+_main(['install', 'wheel', 'requests'])
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-p', '--platform', default=None,
@@ -31,6 +41,7 @@ parser.add_argument('-a', '--arch', default=None, type=str.lower,
                     choices=['x86', 'x64'],
                     required=True, help='System Arch')
 parser.add_argument('--qmake', default='', help='qmake tools')
+parser.add_argument('--openssl', default='', help='openssl path')
 parser.add_argument('--sudo', default=False, type=bool, help='sudo')
 
 args = parser.parse_args()
@@ -42,32 +53,41 @@ if args.platform == 'Windows':
     make = 'nmake'
 print('make:', make)
 print('qmake:', args.qmake)
+print('openssl:', args.openssl)
 print('sudo:', args.sudo)
 
 
 def buildPySide2():
     # 编译
-    try:
-        shutil.rmtree('OpenSSL', ignore_errors=True)
-    except Exception as e:
-        print('remove OpenSSL', e)
+    name = 'libclang-release_80-based-windows-vs2017_32.7z'
+    if not os.path.exists(name):
+        url = 'http://download.qt.io/development_releases/prebuilt/libclang/libclang-release_80-based-windows-vs2017_32.7z'
+        req = requests.get(url, stream=True)
+        with open(name, 'wb') as fp:
+            for chunk in req.iter_content(chunk_size=1024):
+                if chunk:
+                    fp.write(chunk)
+        sleep(1)
+    os.system('cd /D {0}\r\n7z x {1}'.format(os.path.abspath('./')), name)
 
-    with ZipFile('src/openssl-1.0.2j-fips-x86_64.zip', 'r') as tf:
-        tf.extractall(path='src')
+    print('extractall libclang ok')
 
-    print('extractall OpenSSL ok')
+    name = 'pyside-setup-everywhere-src-5.13.1.zip'
+    if not os.path.exists(name):
+        url = 'http://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.13.1-src/pyside-setup-everywhere-src-5.13.1.zip'
+        req = requests.get(url, stream=True)
+        with open(name, 'wb') as fp:
+            for chunk in req.iter_content(chunk_size=1024):
+                if chunk:
+                    fp.write(chunk)
+        sleep(1)
 
-    try:
-        shutil.rmtree('pyside-setup-everywhere-src-5.13.1', ignore_errors=True)
-    except Exception as e:
-        print('remove pyside-setup-everywhere-src-5.13.1', e)
+    with ZipFile('pyside-setup-everywhere-src-5.13.1.zip', 'r') as tf:
+        tf.extractall(path='./')
 
-    with ZipFile('src/pyside-setup-everywhere-src-5.13.1.zip', 'r') as tf:
-        tf.extractall(path='src')
+    print('extractall pyside ok')
 
-    print('extractall PyQt5 ok')
-
-    os.chdir('src/pyside-setup-everywhere-src-5.13.1')
+    os.chdir('pyside-setup-everywhere-src-5.13.1')
 
     try:
         cmd = '{0} setup.py ' \
@@ -75,8 +95,7 @@ def buildPySide2():
               '{1} {2}'.format(
                   sys.executable,
                   '--qmake={}'.format(args.qmake) if args.qmake else '',
-                  '--openssl={}'.format(os.path.abspath(
-                      'src/OpenSSL/bin').replace('/', '\\'))
+                  '--openssl={}'.format(args.openssl) if args.openssl else ''
               )
         print('cmd:', cmd)
         retcode = subprocess.check_call(
