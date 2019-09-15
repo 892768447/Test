@@ -57,9 +57,18 @@ def buildPySide2():
     # 编译
     os.chdir('pyside-setup-everywhere-src-5.13.1')
 
+    # 修改支持Webkit
+    data = open(r'sources\cmake_helpers\helpers.cmake',
+                'rb').read().decode('utf-8')
+    data = data.replace('WebChannel WebEngineCore',
+                        'WebKit WebKitWidgets WebChannel WebEngineCore')
+    open(r'sources\cmake_helpers\helpers.cmake', 'wb').write(data.encode())
+    print(data)
+
     try:
         cmd = '{0} setup.py ' \
               'build ' \
+              '--skip-modules=Sql,Test,Concurrent,WinExtras,Xml,XmlPatterns,Help,Multimedia,MultimediaWidgets,OpenGL,OpenGLFunctions,Positioning,Location,Qml,Quick,QuickWidgets,RemoteObjects,Scxml,Script,ScriptTools,Sensors,TextToSpeech,Charts,Svg,DataVisualization,UiTools,AxContainer,WebChannel,WebEngineCore,WebEngine,WebEngineWidgets,WebSockets,3DCore,3DRender,3DInput,3DLogic,3DAnimation,3DExtras' \
               '{1} {2}'.format(
                   sys.executable,
                   '--qmake={}'.format(args.qmake) if args.qmake else '',
