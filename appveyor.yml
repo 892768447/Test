@@ -12,7 +12,7 @@ environment:
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
-    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;C:\\OpenSSL-Win32\\bin;C:\\Program Files\\LLVM\\bin;%PATH%"
+    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;C:\\OpenSSL-Win32\\bin;%PATH%"
     CONFIG: Release
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -21,6 +21,15 @@ on_finish:
 build:
   parallel: true
   verbosity: minimal
+install:
+  - curl -L -fsS -o libclang-release_80-based-windows-vs2017_32.7z http://download.qt.io/development_releases/prebuilt/libclang/libclang-release_80-based-windows-vs2017_32.7z
+  - curl -L -fsS -o pyside-setup-everywhere-src-5.13.1.zip http://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.13.1-src/pyside-setup-everywhere-src-5.13.1.zip
+  - 7z x libclang-release_80-based-windows-vs2017_32.7z
+  - 7z x pyside-setup-everywhere-src-5.13.1.zip
+  - set CLANG_INSTALL_DIR=%CD%\libclang
+  - set LLVM_INSTALL_DIR=%CD%\libclang
+  - set PATH=%CD%\libclang\bin;%PATH%
+  - echo %PATH%
 build_script:
 - cmd: >-
     "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %PLATFORM%
@@ -29,20 +38,12 @@ build_script:
 
     cmake --version
 
-    clang --version
-
     qmake --version
+
+    clang --version
 
     xcopy "Windows\%PLATFORM%\PyQt5\Qt\*" %QTDIR% /S /E /Y /D
 
     dir
-
-    set CLANG_INSTALL_DIR=%CD%\libclang
-
-    set LLVM_INSTALL_DIR=C:\Program Files\LLVM
-
-    set PATH=%PATH%;%CD%\libclang\bin;
-
-    echo %PATH%
 
     C:\Python35\python build.py -p Windows -a x86 --qmake=%QTDIR%\bin\qmake.exe --openssl=C:\OpenSSL-Win32\bin

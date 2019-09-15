@@ -13,8 +13,6 @@ import argparse
 import os
 import subprocess
 import sys
-from time import sleep
-from zipfile import ZipFile
 
 
 try:
@@ -56,36 +54,7 @@ print('sudo:', args.sudo)
 
 
 def buildPySide2():
-    import requests
     # 编译
-    name = 'libclang-release_80-based-windows-vs2017_32.7z'
-    if not os.path.exists(name):
-        url = 'http://download.qt.io/development_releases/prebuilt/libclang/libclang-release_80-based-windows-vs2017_32.7z'
-        req = requests.get(url, stream=True)
-        with open(name, 'wb') as fp:
-            for chunk in req.iter_content(chunk_size=1024):
-                if chunk:
-                    fp.write(chunk)
-        sleep(1)
-    os.system('cd /D {0}\r\n7z x {1}'.format(os.path.abspath('./'), name))
-
-    print('extractall libclang ok')
-
-    name = 'pyside-setup-everywhere-src-5.13.1.zip'
-    if not os.path.exists(name):
-        url = 'http://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.13.1-src/pyside-setup-everywhere-src-5.13.1.zip'
-        req = requests.get(url, stream=True)
-        with open(name, 'wb') as fp:
-            for chunk in req.iter_content(chunk_size=1024):
-                if chunk:
-                    fp.write(chunk)
-        sleep(1)
-
-    with ZipFile('pyside-setup-everywhere-src-5.13.1.zip', 'r') as tf:
-        tf.extractall(path='./')
-
-    print('extractall pyside ok')
-
     os.chdir('pyside-setup-everywhere-src-5.13.1')
 
     try:
