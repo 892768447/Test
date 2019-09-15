@@ -12,7 +12,7 @@ environment:
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
-    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;C:\\OpenSSL-Win32\\bin;%PATH%"
+    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;C:\\OpenSSL-Win32\\bin;C:\\Program Files\\LLVM\\bin;%PATH%"
     CONFIG: Release
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -37,9 +37,9 @@ build_script:
 
     set CLANG_INSTALL_DIR=%CD%\libclang
 
-    set LLVM_INSTALL_DIR=%CD%\libclang
+    set LLVM_INSTALL_DIR=C:\Program Files\LLVM
 
-    set PATH=%PATH%;%CD%\libclang\bin
+    set PATH=%PATH%;%CD%\libclang\bin;
 
     echo %PATH%
 
