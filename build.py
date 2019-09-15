@@ -68,7 +68,7 @@ def buildPySide2():
     try:
         cmd = '{0} setup.py ' \
               'build ' \
-              '--skip-modules=Sql,Test,Concurrent,WinExtras,Xml,XmlPatterns,Help,Multimedia,MultimediaWidgets,OpenGL,OpenGLFunctions,Positioning,Location,Qml,Quick,QuickWidgets,RemoteObjects,Scxml,Script,ScriptTools,Sensors,TextToSpeech,Charts,Svg,DataVisualization,UiTools,AxContainer,WebChannel,WebEngineCore,WebEngine,WebEngineWidgets,WebSockets,3DCore,3DRender,3DInput,3DLogic,3DAnimation,3DExtras' \
+              '--skip-modules=Sql,Test,Concurrent,WinExtras,Xml,XmlPatterns,Help,Multimedia,MultimediaWidgets,OpenGL,OpenGLFunctions,Positioning,Location,Qml,Quick,QuickWidgets,RemoteObjects,Scxml,Script,ScriptTools,Sensors,TextToSpeech,Charts,Svg,DataVisualization,UiTools,AxContainer,WebChannel,WebEngineCore,WebEngine,WebEngineWidgets,WebSockets,3DCore,3DRender,3DInput,3DLogic,3DAnimation,3DExtras ' \
               '{1} {2}'.format(
                   sys.executable,
                   '--qmake={}'.format(args.qmake) if args.qmake else '',
